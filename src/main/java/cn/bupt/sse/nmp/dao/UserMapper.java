@@ -18,4 +18,6 @@ public interface UserMapper {
      * @mbg.generated
      */
     int insertSelective(User record);
+
+    User selectByUserPhone(Integer userPhone);
 }
