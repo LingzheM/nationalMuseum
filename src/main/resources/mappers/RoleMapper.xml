@@ -51,4 +51,7 @@
       </if>
     </trim>
   </insert>
+  <select id="findById">
+    select  * from role where roleId = #{roleId}
+  </select>
 </mapper>
