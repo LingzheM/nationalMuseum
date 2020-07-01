@@ -48,7 +48,7 @@ public class JWTUtil {
      * @param token
      * @return
      */
-    public static String getUsername(String token) {
+    public static String getUserPhone(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
 
