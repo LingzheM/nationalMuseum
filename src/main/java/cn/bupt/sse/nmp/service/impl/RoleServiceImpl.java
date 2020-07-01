@@ -20,10 +20,14 @@ import java.util.List;
 @Slf4j
 @Service
 public class RoleServiceImpl implements RoleService {
+
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
+
     @Autowired
     private RoleMapper roleMapper;
+
+
     @Override
     public void assignPerms(Integer roleId, List<Integer> permIds) {
         for (Integer permId : permIds) {
@@ -34,7 +38,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role findById(Integer roleId) {
-        Role role = roleMapper.findById(roleId);
+        Role role = roleMapper.selectByRoleId(roleId);
         return role;
     }
 }

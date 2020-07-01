@@ -27,7 +27,7 @@ public class Result<T> {
 
     private Result(CodeMsg codeMsg) {
         this.code = codeMsg.getCode();
-        this.message = codeMsg.getMessge();
+        this.message = codeMsg.getMessage();
         this.data = null;
     }
 

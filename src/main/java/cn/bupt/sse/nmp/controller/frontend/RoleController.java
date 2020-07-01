@@ -39,14 +39,14 @@ public class RoleController {
         return Result.success(null);
     }
 
-    //测试mapper
-    @Autowired
-    private RoleMapper roleMapper;
-    @RequestMapping(value = "/get",method = RequestMethod.GET)
-    public Role get(){
-        Role byId = roleMapper.findById(1);
-        return byId;
-    }
+//    //测试mapper
+//    @Autowired
+//    private RoleMapper roleMapper;
+//    @RequestMapping(value = "/get",method = RequestMethod.GET)
+//    public Role get(){
+//        Role byId = roleMapper.selectByRoleId(1);
+//        return byId;
+//    }
 
 
 }
