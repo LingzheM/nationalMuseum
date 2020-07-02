@@ -7,5 +7,5 @@ public interface UserMapper {
 
     int insertSelective(User record);
 
-    User selectByUserPhone(Integer userPhone);
+    User selectByUserPhone(String userPhone);
 }

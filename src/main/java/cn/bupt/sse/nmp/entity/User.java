@@ -7,7 +7,7 @@ public class User {
 
     private String userName;
 
-    private Integer phone;
+    private String phone;
 
     private String password;
 
@@ -19,7 +19,7 @@ public class User {
 
     private Date createTime;
 
-    public User(Integer userId, String userName, Integer phone, String password, Byte status, Byte age, String sex, Date createTime) {
+    public User(Integer userId, String userName, String phone, String password, Byte status, Byte age, String sex, Date createTime) {
         this.userId = userId;
         this.userName = userName;
         this.phone = phone;
@@ -50,11 +50,11 @@ public class User {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(Integer phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 public class JWTUtil {
@@ -22,7 +23,7 @@ public class JWTUtil {
      * @param password
      * @return
      */
-    public static boolean verify(String token, Integer userPhone, String password) {
+    public static boolean verify(String token, String userPhone, String password) {
 
         try {
             Algorithm algorithm = Algorithm.HMAC256(password);
@@ -65,7 +66,7 @@ public class JWTUtil {
      * @param password
      * @return
      */
-    public static String sign(Integer userPhone, String password) {
+    public static String sign(String userPhone, String password) {
         Date expireDate = new Date(System.currentTimeMillis() + expireTime);
 
         Algorithm algorithm = Algorithm.HMAC256(password);

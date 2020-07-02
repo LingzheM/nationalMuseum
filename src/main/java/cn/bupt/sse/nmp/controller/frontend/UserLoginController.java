@@ -24,30 +24,39 @@ public class UserLoginController {
 
     /**
      * 注册
-     * @param user
      * @param request
      * @param response
      * @return
      */
     @RequestMapping("/register")
-    public Result<LoginUser> register(@RequestParam User user, HttpServletRequest request, HttpServletResponse response) {
+    public Result<User> register(HttpServletRequest request, HttpServletResponse response) {
+        // 获取注册手机号、用户名和密码
+        String userPhone = request.getParameter("userPhone");
+        String userName = request.getParameter("userName");
+        String password = request.getParameter("password");
+        // 创建一个用户
+        User user = new User();
+        user.setPhone(userPhone);
+        user.setPassword(password);
+        user.setUserName(userName);
 
-        return Result.error(CodeMsg.USER_NOT_EXIST);
+        Result<User> result = userService.UserRegister(user);
+
+        return result;
     }
 
     /**
      * 登录
-     * @param user
      * @param request
      * @param response
      * @return
      */
     @RequestMapping("/login")
-    public Result<LoginUser> login(@RequestParam User user, HttpServletRequest request, HttpServletResponse response) {
+    public Result<LoginUser> login(HttpServletRequest request, HttpServletResponse response) {
 
         // 获取用户手机号和密码
-        Integer userPhone = user.getPhone();
-        String password = user.getPassword();
+        String userPhone = request.getParameter("userPhone");
+        String password = request.getParameter("password");
 
         return userService.login(userPhone, password);
     }
@@ -55,7 +64,6 @@ public class UserLoginController {
 
     @RequestMapping("/getInfo")
     public Result<String> getInfo(HttpServletRequest request, HttpServletResponse response) {
-
         return Result.success("");
     }
 

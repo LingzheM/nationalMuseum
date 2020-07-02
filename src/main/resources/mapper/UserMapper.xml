@@ -5,7 +5,7 @@
     <constructor>
       <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="userName" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="phone" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="phone" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="status" javaType="java.lang.Byte" jdbcType="TINYINT" />
       <arg column="age" javaType="java.lang.Byte" jdbcType="TINYINT" />
@@ -17,7 +17,7 @@
     insert into user (userId, userName, phone, 
       password, status, age, 
       sex, createTime)
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{phone,jdbcType=INTEGER}, 
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
       #{password,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{age,jdbcType=TINYINT}, 
       #{sex,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP})
   </insert>
@@ -76,4 +76,8 @@
       </if>
     </trim>
   </insert>
+  
+  <select id="selectByUserPhone" parameterType="java.lang.String" resultType="cn.bupt.sse.nmp.entity.User">
+    select * from user where phone = #{userPhone}
+  </select>
 </mapper>

@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public Result<LoginUser> login(Integer userPhone, String password) {
+    public Result<LoginUser> login(String userPhone, String password) {
 
         User user = userMapper.selectByUserPhone(userPhone);
 
@@ -34,6 +34,36 @@ public class UserServiceImpl implements UserService {
         }else {
             return Result.error(CodeMsg.USER_NOT_EXIST);
         }
-
     }
+
+    @Override
+    public Result<User> getUserByPhone(String userPhone) {
+        User user = userMapper.selectByUserPhone(userPhone);
+        if (user==null) {
+            return Result.error(CodeMsg.USER_NOT_EXIST);
+        }else {
+            return Result.success(user);
+        }
+    }
+
+    /**
+     * 注册功能
+     * @param user
+     * @return
+     */
+    @Override
+    public Result<User> UserRegister(User user) {
+        String userPhone = user.getPhone();
+
+        User aUser = userMapper.selectByUserPhone(userPhone);
+
+        if (aUser!=null&&aUser.getPhone().equals(userPhone)) {
+            return Result.error(CodeMsg.USER_PHONE_EXISTED);
+        }else {
+            Integer resultCode = userMapper.insert(user);
+            return Result.success(user);
+        }
+    }
+
+
 }

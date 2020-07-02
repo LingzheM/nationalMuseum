@@ -6,7 +6,7 @@ import cn.bupt.sse.nmp.result.Result;
 
 public interface UserService {
 
-    Result<LoginUser> login(Integer userPhone, String password);
+    Result<LoginUser> login(String userPhone, String password);
 
 
     /**
@@ -14,6 +14,8 @@ public interface UserService {
      * @param userPhone
      * @return
      */
-    Result<User> getUserByPhone(Integer userPhone);
+    Result<User> getUserByPhone(String userPhone);
+
+    Result<User> UserRegister(User user);
 
 }
