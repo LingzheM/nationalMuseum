@@ -31,4 +31,15 @@ public class Result<T> {
         this.data = null;
     }
 
+    public Integer getCode() {
+        return code;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

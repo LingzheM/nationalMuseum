@@ -7,5 +7,13 @@ import java.util.List;
 public interface RoleService {
     public void assignPerms(Integer roleId,List<Integer> permIds);
 
-    public Role findById(Integer roleId);
+    public Role selectByRoleId(Integer roleId);
+    void addRole(Role role);
+
+    void updateRole(Role role);
+
+    void delRoleById(Integer roleId);
+
+
+    List<Role> selectAll();
 }

@@ -30,4 +30,7 @@
       </if>
     </trim>
   </insert>
+  <select id="selectPermIdsByRoleId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select permissionId from role_permission where roleId = #{roleId}
+  </select>
 </mapper>

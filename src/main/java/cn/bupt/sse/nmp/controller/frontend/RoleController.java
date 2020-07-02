@@ -1,16 +1,16 @@
 package cn.bupt.sse.nmp.controller.frontend;
 
 import cn.bupt.sse.nmp.dao.RoleMapper;
+import cn.bupt.sse.nmp.dao.RolePermissionMapper;
 import cn.bupt.sse.nmp.entity.Role;
 import cn.bupt.sse.nmp.entity.RolePermission;
+import cn.bupt.sse.nmp.result.CodeMsg;
 import cn.bupt.sse.nmp.result.Result;
 import cn.bupt.sse.nmp.service.RoleService;
 import javafx.beans.binding.ObjectExpression;
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -36,17 +36,46 @@ public class RoleController {
         Integer roleId = (Integer) map.get("roleId");
         List<Integer> permIds = (List<Integer>) map.get("permIds");
         roleService.assignPerms(roleId,permIds);
-        return Result.success(null);
+        return Result.success("");
     }
 
-//    //测试mapper
-//    @Autowired
-//    private RoleMapper roleMapper;
-//    @RequestMapping(value = "/get",method = RequestMethod.GET)
-//    public Role get(){
-//        Role byId = roleMapper.selectByRoleId(1);
-//        return byId;
-//    }
+    /**
+     * 添加角色
+     * @param role Role
+     * @return
+     */
+    @RequestMapping(value = "/addRole",method = RequestMethod.POST)
+    public Result addRole(@RequestBody Role role){
+        roleService.addRole(role);
+        return Result.success("");
+    }
 
+    /**
+     * 更新角色
+     * @param role
+     * @return
+     */
+    @RequestMapping(value = "/updateRole",method = RequestMethod.PUT)
+    public Result updateRole(@RequestBody Role role){
+        roleService.updateRole(role);
+        return Result.success("");
+    }
+
+    /**
+     * 按照id删除角色
+     * @param roleId
+     * @return
+     */
+    @RequestMapping(value = "/delRole",method = RequestMethod.DELETE)
+    public Result delRoleById(@RequestParam  Integer roleId){
+        roleService.delRoleById(roleId);
+        return Result.success("");
+    }
+
+    @RequestMapping(value = "selectAll",method = RequestMethod.GET)
+    public Result selectAll(){
+        List<Role> roles = roleService.selectAll();
+        return Result.success(roles);
+    }
 
 }
