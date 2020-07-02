@@ -1,10 +1,19 @@
 package cn.bupt.sse.nmp.service;
 
 import cn.bupt.sse.nmp.entity.LoginUser;
+import cn.bupt.sse.nmp.entity.User;
 import cn.bupt.sse.nmp.result.Result;
 
 public interface UserService {
 
-    public Result<LoginUser> login(Integer userPhone, String password);
+    Result<LoginUser> login(Integer userPhone, String password);
+
+
+    /**
+     * 根据手机号获取用户
+     * @param userPhone
+     * @return
+     */
+    Result<User> getUserByPhone(Integer userPhone);
 
 }
