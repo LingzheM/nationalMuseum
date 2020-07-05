@@ -41,7 +41,7 @@ public class RoleTest {
 
     @Test
     public void testForUserSelect() {
-        User user = userMapper.selectByUserPhone(176);
+        User user = userMapper.selectByUserPhone("176");
 
         System.out.println(user);
     }
