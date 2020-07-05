@@ -14,35 +14,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = NationalMuseumSystemApplication.class)
+@SpringBootTest(classes = NationalMuseumSystemApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class RoleTest {
-
-    @Autowired
-    private RoleMapper roleMapper;
-
-    @Autowired
-    private UserMapper userMapper;
-
-
-    public void setRoleMapper(RoleMapper roleMapper) {
-        this.roleMapper = roleMapper;
-    }
-
-    public void setUserMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
-
-    @Test
-    public void testForSelect() {
-        Role role = roleMapper.selectByRoleId(1);
-
-        System.out.println(role.getDescription());
-    }
 
     @Test
     public void testForUserSelect() {
-        User user = userMapper.selectByUserPhone("176");
 
-        System.out.println(user);
+        System.out.println(1);
     }
 }
