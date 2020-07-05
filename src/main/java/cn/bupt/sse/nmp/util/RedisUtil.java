@@ -21,9 +21,11 @@ public class RedisUtil {
     static {
         try {
             JedisPoolConfig config = new JedisPoolConfig();
-            config.setMaxActive(ConstantsRedis.MAX_ACTIVE);
+
+            //config.setMaxActive(ConstantsRedis.MAX_ACTIVE);
             config.setMaxIdle(ConstantsRedis.MAX_IDLE);
-            config.setMaxWait(ConstantsRedis.MAX_WAIT);
+            config.setMaxWaitMillis(ConstantsRedis.MAX_WAIT);
+            //config.setMaxWait(ConstantsRedis.MAX_WAIT);
             config.setTestOnBorrow(ConstantsRedis.TEST_ON_BORROW);
             jedisPool = new JedisPool(config, ConstantsRedis.ADDR, ConstantsRedis.PORT,10000,ConstantsRedis.AUTH);
         } catch (Exception e) {
@@ -333,7 +335,7 @@ public class RedisUtil {
     /**
      * 获得db大小
      *
-     * @param key
+     * @param
      * @return
      */
     public static Long getSize() {
