@@ -56,11 +56,11 @@ public class MyRealm extends AuthorizingRealm {
         String token = (String) authenticationToken.getCredentials();
 
         // 通过解码获取userPhone
-        Integer userPhone = Integer.decode(JWTUtil.getUserPhone(token));
+        String userPhone = JWTUtil.getUserPhone(token);
 
         Result<User> userResult = userService.getUserByPhone(userPhone);
 
-        if (userResult.getCode()==40001||userResult.getData().equals(null)) {
+        if (userResult.getData().equals(null)) {
             throw new AuthenticationException("用户不存在");
         }
 
