@@ -6,6 +6,11 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @program: nationalMuseum
  * @description:
@@ -373,7 +378,7 @@ public class RedisUtil {
         }
     }
     /**
-     * redis  对list的左侧push
+     * redis  对list的右侧push
      * @param key
      * @param strings
      * @return
@@ -392,6 +397,13 @@ public class RedisUtil {
         }
     }
 
+    /**
+     * 用来清除list中的所有元素 left 1 right 0
+     * @param key
+     * @param left
+     * @param right
+     * @return
+     */
     public static String ltrim(String key,long left,long right) {
         Jedis jedis = null;
         try {
@@ -405,7 +417,214 @@ public class RedisUtil {
         }
     }
 
+    /**
+     * 获取列表长度
+     * @param key
+     * @return
+     */
+    public static Long llen(String key){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.llen(key);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
 
+    /**
+     * 移除并返回最左侧的元素
+     * @param key
+     * @return
+     */
+    public static String lpop(String key){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.lpop(key);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
 
+    /**
+     * 移除并返回最右侧的元素
+     * @param key
+     * @return
+     */
+    public static String rpop(String key){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.rpop(key);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+    /**
+     * 获取列表中的全部元素
+     * @param key
+     * @return
+     */
+    public static List<String> lrange(String key, Long start, Long end){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.lrange(key,start,end);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+
+    /**
+     * 想hash中添加整型元素
+     * @param key
+     * @return
+     */
+    public static Long hset(String key,String field,Integer type){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.hset(key,field,String.valueOf(type));
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+    /**
+     * 想hash中添加时间戳元素
+     * @param key
+     * @return
+     */
+    public static Long hset(String key,String field,Timestamp data){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.hset(key,field,String.valueOf(data.toString()));
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+
+    /**
+     * 想hash中添加整型元素
+     * @param key
+     * @return
+     */
+    public static Boolean hexists(String key,String field){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.hexists(key,field);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+
+    /**
+     * 获取hash中的元素
+     * @param key
+     * @return
+     */
+    public static String hget(String key,String field){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.hget(key,field);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+    /**
+     * 想hash中添加整型元素
+     * @param key
+     * @return
+     */
+    public static Long hlen(String key){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.hlen(key);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+    /**
+     * 想hash中添加整型元素
+     * @param key
+     * @return
+     */
+    public static List<String> hkeys(String key){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return new ArrayList<String>(jedis.hkeys(key));
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+    /**
+     * 想hash中添加整型元素
+     * @param key
+     * @return
+     */
+    public static List<String> hmget(String key,String fields){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return new ArrayList<String>(jedis.hmget(key,fields));
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+    /**
+     * 想hash中添加整型元素
+     * @param key
+     * @return
+     */
+    public static List<String> hvals(String key){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return new ArrayList<String>(jedis.hkeys(key));
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
 
 }

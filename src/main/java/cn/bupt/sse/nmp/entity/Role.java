@@ -6,11 +6,22 @@ public class Role {
     private String roleName;
 
     private String description;
+    private Integer type;
 
-    public Role(Integer roleId, String roleName, String description) {
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Role(Integer roleId, String roleName, String description, Integer type) {
         this.roleId = roleId;
         this.roleName = roleName;
         this.description = description;
+        this.type = type;
+
     }
 
     public Role() {
