@@ -1,8 +1,14 @@
 package cn.bupt.sse.nmp.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel("角色权限模型")
 public class RolePermission {
+    @ApiModelProperty("角色Id")
     private Integer roleId;
 
+    @ApiModelProperty("权限Id")
     private Integer permissionId;
 
     public RolePermission(Integer roleId, Integer permissionId) {

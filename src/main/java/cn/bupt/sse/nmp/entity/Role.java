@@ -1,11 +1,17 @@
 package cn.bupt.sse.nmp.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel("角色模型")
 public class Role {
+    @ApiModelProperty("角色Id")
     private Integer roleId;
-
+    @ApiModelProperty("角色名称")
     private String roleName;
-
+    @ApiModelProperty("角色描述")
     private String description;
+    @ApiModelProperty("角色类型")
     private Integer type;
 
     public Integer getType() {

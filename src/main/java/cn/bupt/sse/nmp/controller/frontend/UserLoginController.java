@@ -5,12 +5,11 @@ import cn.bupt.sse.nmp.entity.User;
 import cn.bupt.sse.nmp.result.CodeMsg;
 import cn.bupt.sse.nmp.result.Result;
 import cn.bupt.sse.nmp.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,41 +17,37 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RestController
 @RequestMapping("/frontend")
+@Api(tags = "登陆注册")
 public class UserLoginController {
 
     @Autowired
     UserService userService;
 
     /**
-     * 注册
      * @param user
      * @return
      */
+    @ApiOperation(value = "用户注册", notes = "无需添加用户id和创建时间")
     @PostMapping("/register")
-    public Result<Integer> register(User user) {
-
+    public Result<Integer> register(@RequestBody User user) {
         Result<Integer> result = userService.UserRegister(user);
-
         return result;
     }
 
     /**
-     * 登录
-     * @param request
-     * @param response
+     * @param userPhone
+     * @param password
      * @return
      */
-    @RequestMapping("/login")
-    public Result<LoginUser> login(HttpServletRequest request, HttpServletResponse response) {
-
-        // 获取用户手机号和密码
-        String userPhone = request.getParameter("userPhone");
-        String password = request.getParameter("password");
-
+    @ApiOperation(value = "用户登录")
+    @PostMapping(value = "/login")
+    public Result<LoginUser> login(@RequestParam String userPhone,
+                                   @RequestParam String password) {
         return userService.login(userPhone, password);
     }
-    
-    @RequestMapping("/getInfo")
+
+
+    @PostMapping("/getInfo")
     public Result<String> getInfo(HttpServletRequest request, HttpServletResponse response) {
         return Result.success("");
     }
