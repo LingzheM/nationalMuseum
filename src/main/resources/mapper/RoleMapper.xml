@@ -52,12 +52,18 @@
     where user.phone = #{phone, jdbcType=VARCHAR}
   </select>
   <update id="updateRole" parameterType="Role">
-    update role set roleName = #{roleName}, description = #{description} where roleId = #{roleId}
+    update role
+    <trim prefix="set" suffixOverrides=",">
+      <if test="roleName!=null">roleName=#{roleName},</if>
+      <if test="description!=null">description=#{description},</if>
+      <if test="type!=null">type=#{type},</if>
+    </trim>
+    WHERE roleId=#{roleId}
   </update>
   <delete id="delRoleById" parameterType="java.lang.Integer">
     delete from role where roleId = #{roleId}
   </delete>
   <select id="selectAll" resultMap="BaseResultMap">
-    select * from role;
+    select * from role
   </select>
 </mapper>

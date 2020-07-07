@@ -1,12 +1,21 @@
 package cn.bupt.sse.nmp.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel("权限模型")
 public class Permission {
+
+    @ApiModelProperty("权限Id")
     private Integer permissionId;
 
+    @ApiModelProperty("权限名称")
     private String permissionName;
 
+    @ApiModelProperty("权限type")
     private Byte type;
 
+    @ApiModelProperty("权限描述")
     private String description;
 
     public Permission(Integer permissionId, String permissionName, Byte type, String description) {
