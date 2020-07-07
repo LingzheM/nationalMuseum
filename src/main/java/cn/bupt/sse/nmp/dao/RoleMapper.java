@@ -11,6 +11,8 @@ public interface RoleMapper {
 
     Role selectByRoleId(Integer roleId);
 
+    Role selectByUserPhone(String phone);
+
     void updateRole(Role role);
 
     void delRoleById(Integer roleId);

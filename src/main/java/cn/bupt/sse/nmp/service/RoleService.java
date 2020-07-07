@@ -14,6 +14,7 @@ public interface RoleService {
 
     void delRoleById(Integer roleId);
 
+    public Role selectByUserPhone(String phone);
 
     List<Role> selectAll();
 }

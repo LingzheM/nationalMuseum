@@ -61,6 +61,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Role selectByUserPhone(String phone) {
+        return roleMapper.selectByUserPhone(phone);
+    }
+
+    @Override
     public List<Role> selectAll() {
         return roleMapper.selectAll();
     }

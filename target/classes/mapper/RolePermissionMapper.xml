@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bupt.sse.nmp.dao.RolePermissionMapper">
+  <resultMap id="BaseResultMap" type="cn.bupt.sse.nmp.entity.RolePermission">
+    <constructor>
+      <arg column="roleId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="permissionId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="cn.bupt.sse.nmp.entity.RolePermission">
+    insert into role_permission (roleId, permissionId)
+    values (#{roleId,jdbcType=INTEGER}, #{permissionId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.RolePermission">
+    insert into role_permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        roleId,
+      </if>
+      <if test="permissionId != null">
+        permissionId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="permissionId != null">
+        #{permissionId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="selectPermIdsByRoleId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select permissionId from role_permission where roleId = #{roleId}
+  </select>
+</mapper>

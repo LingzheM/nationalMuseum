@@ -9,6 +9,7 @@ import cn.bupt.sse.nmp.result.Result;
 import cn.bupt.sse.nmp.service.RoleService;
 import javafx.beans.binding.ObjectExpression;
 import javafx.geometry.Pos;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping(value = "/role")
+@RequiresRoles("super admin")
 public class RoleController {
     @Autowired
     private RoleService roleService;
