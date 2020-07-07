@@ -1,8 +1,10 @@
 package cn.bupt.sse.nmp.shiro;
 
+import cn.bupt.sse.nmp.entity.Role;
 import cn.bupt.sse.nmp.entity.User;
 import cn.bupt.sse.nmp.jwt.JWTToken;
 import cn.bupt.sse.nmp.result.Result;
+import cn.bupt.sse.nmp.service.RoleService;
 import cn.bupt.sse.nmp.service.UserService;
 import cn.bupt.sse.nmp.util.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +13,14 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -22,6 +28,8 @@ public class MyRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
 
 
     /**
@@ -42,7 +50,16 @@ public class MyRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
+        log.info("授权");
+        String token = (String) principalCollection.getPrimaryPrincipal();
+        // 通过解码获取userPhone
+        String userPhone = JWTUtil.getUserPhone(token);
+        Role role = roleService.selectByUserPhone(userPhone);
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        Set<String> roleSet = new HashSet<>();
+        roleSet.add(role.getRoleName());
+        info.setRoles(roleSet);
+        return info;
     }
 
     /**

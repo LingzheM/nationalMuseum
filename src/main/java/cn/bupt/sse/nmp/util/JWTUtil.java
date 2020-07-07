@@ -29,7 +29,7 @@ public class JWTUtil {
             Algorithm algorithm = Algorithm.HMAC256(password);
             // 校验器
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withClaim("username", userPhone)
+                    .withClaim("userPhone", userPhone)
                     .build();
 
             // 校验token
@@ -38,6 +38,7 @@ public class JWTUtil {
             log.info("user-"+userPhone+", 登录成功");
             return true;
         } catch (Exception e) {
+            log.error(e.toString());
             log.error("登录验证失败");
         }
 

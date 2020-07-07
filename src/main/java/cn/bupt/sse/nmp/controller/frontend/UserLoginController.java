@@ -7,6 +7,7 @@ import cn.bupt.sse.nmp.result.Result;
 import cn.bupt.sse.nmp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,23 +25,13 @@ public class UserLoginController {
 
     /**
      * 注册
-     * @param request
-     * @param response
+     * @param user
      * @return
      */
-    @RequestMapping("/register")
-    public Result<User> register(HttpServletRequest request, HttpServletResponse response) {
-        // 获取注册手机号、用户名和密码
-        String userPhone = request.getParameter("userPhone");
-        String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
-        // 创建一个用户
-        User user = new User();
-        user.setPhone(userPhone);
-        user.setPassword(password);
-        user.setUserName(userName);
+    @PostMapping("/register")
+    public Result<Integer> register(User user) {
 
-        Result<User> result = userService.UserRegister(user);
+        Result<Integer> result = userService.UserRegister(user);
 
         return result;
     }
@@ -60,8 +51,7 @@ public class UserLoginController {
 
         return userService.login(userPhone, password);
     }
-
-
+    
     @RequestMapping("/getInfo")
     public Result<String> getInfo(HttpServletRequest request, HttpServletResponse response) {
         return Result.success("");

@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Result<User> UserRegister(User user) {
+    public Result<Integer> UserRegister(User user) {
         String userPhone = user.getPhone();
 
         User aUser = userMapper.selectByUserPhone(userPhone);
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             return Result.error(CodeMsg.USER_PHONE_EXISTED);
         }else {
             Integer resultCode = userMapper.insert(user);
-            return Result.success(user);
+            return Result.success(resultCode);
         }
     }
 

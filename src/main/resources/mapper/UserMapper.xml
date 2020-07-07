@@ -19,7 +19,7 @@
       sex, createTime)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
       #{password,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{age,jdbcType=TINYINT}, 
-      #{sex,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP})
+      #{sex,jdbcType=CHAR}, now())
   </insert>
   <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.User">
     insert into user
