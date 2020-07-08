@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bupt.sse.nmp.dao.LocInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.bupt.sse.nmp.entity.LocInfo">
+    <constructor>
+      <arg column="locId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="locationTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="locationX" javaType="java.lang.Double" jdbcType="DOUBLE" />
+      <arg column="locationY" javaType="java.lang.Double" jdbcType="DOUBLE" />
+      <arg column="gpsX" javaType="java.lang.Double" jdbcType="DOUBLE" />
+      <arg column="gpsY" javaType="java.lang.Double" jdbcType="DOUBLE" />
+      <arg column="floor" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="frequency" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="buildingId" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="exhibitionId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="type" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="cn.bupt.sse.nmp.entity.LocInfo">
+    insert into loc_info (locId, userId, locationTime, 
+      locationX, locationY, gpsX, 
+      gpsY, floor, frequency, 
+      buildingId, exhibitionId, type
+      )
+    values (#{locId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{locationTime,jdbcType=TIMESTAMP}, 
+      #{locationX,jdbcType=DOUBLE}, #{locationY,jdbcType=DOUBLE}, #{gpsX,jdbcType=DOUBLE}, 
+      #{gpsY,jdbcType=DOUBLE}, #{floor,jdbcType=INTEGER}, #{frequency,jdbcType=INTEGER}, 
+      #{buildingId,jdbcType=VARCHAR}, #{exhibitionId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.LocInfo">
+    insert into loc_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="locId != null">
+        locId,
+      </if>
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="locationTime != null">
+        locationTime,
+      </if>
+      <if test="locationX != null">
+        locationX,
+      </if>
+      <if test="locationY != null">
+        locationY,
+      </if>
+      <if test="gpsX != null">
+        gpsX,
+      </if>
+      <if test="gpsY != null">
+        gpsY,
+      </if>
+      <if test="floor != null">
+        floor,
+      </if>
+      <if test="frequency != null">
+        frequency,
+      </if>
+      <if test="buildingId != null">
+        buildingId,
+      </if>
+      <if test="exhibitionId != null">
+        exhibitionId,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="locId != null">
+        #{locId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="locationTime != null">
+        #{locationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="locationX != null">
+        #{locationX,jdbcType=DOUBLE},
+      </if>
+      <if test="locationY != null">
+        #{locationY,jdbcType=DOUBLE},
+      </if>
+      <if test="gpsX != null">
+        #{gpsX,jdbcType=DOUBLE},
+      </if>
+      <if test="gpsY != null">
+        #{gpsY,jdbcType=DOUBLE},
+      </if>
+      <if test="floor != null">
+        #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="frequency != null">
+        #{frequency,jdbcType=INTEGER},
+      </if>
+      <if test="buildingId != null">
+        #{buildingId,jdbcType=VARCHAR},
+      </if>
+      <if test="exhibitionId != null">
+        #{exhibitionId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

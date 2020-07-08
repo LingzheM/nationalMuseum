@@ -18,6 +18,16 @@ import java.util.Set;
  * @create: 2020-07-04 19:26
  **/
 public class RedisUtil {
+    //用来记录当前楼层的所有用户（包括游客 和 工作人员）的角色类型
+    public static final String  ACTIVE_USER_TYPE = "type";
+    //用来记录活跃用户的上一次访问的展品的id+初次到达展品的时间
+    public static final String  ACTIVE_USER_EXHIBIT = "exhibit";
+    //游客上次访问的楼层
+    public static final String  ACTIVE_USER_FLOOR= "floor";
+    public static final String  PERSON_NUMBER= "personNumber";
+
+
+
     private static JedisPool jedisPool = null;
 
     /**
@@ -522,6 +532,23 @@ public class RedisUtil {
             RedisUtil.returnResource(jedis);
         }
     }
+    /**
+     * 想hash中添加时间戳元素
+     * @param key
+     * @return
+     */
+    public static Long hset(String key,String field,String value){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.hset(key,field,value);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
 
     /**
      * 想hash中添加整型元素
@@ -551,6 +578,19 @@ public class RedisUtil {
         try{
             jedis = RedisUtil.getJedis();
             return jedis.hget(key,field);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+
+    public static Long hdel(String key,String field){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.hdel(key,field);
         }catch (Exception e){
             e.printStackTrace();
             return null;
