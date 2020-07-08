@@ -1,22 +1,34 @@
 package cn.bupt.sse.nmp.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
+@ApiModel("用户模型")
 public class User {
+    @ApiModelProperty("用户Id")
     private Integer userId;
 
+    @ApiModelProperty("用户名")
     private String userName;
 
+    @ApiModelProperty("用户手机")
     private String phone;
 
+    @ApiModelProperty("用户密码")
     private String password;
 
+    @ApiModelProperty("用户状态")
     private Byte status;
 
+    @ApiModelProperty("用户年龄")
     private Byte age;
 
+    @ApiModelProperty("用户性别")
     private String sex;
 
+    @ApiModelProperty("用户创建时间")
     private Date createTime;
 
     public User(Integer userId, String userName, String phone, String password, Byte status, Byte age, String sex, Date createTime) {

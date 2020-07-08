@@ -16,6 +16,6 @@ public interface UserService {
      */
     Result<User> getUserByPhone(String userPhone);
 
-    Result<User> UserRegister(User user);
+    Result<Integer> UserRegister(User user);
 
 }

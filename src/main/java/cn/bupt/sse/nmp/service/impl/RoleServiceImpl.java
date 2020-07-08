@@ -49,15 +49,17 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void updateRole(Role role) {
-        Role roleOld = roleMapper.selectByRoleId(role.getRoleId());
-        roleOld.setRoleName(role.getRoleName());
-        roleOld.setDescription(role.getDescription());
-        roleMapper.updateRole(roleOld);
+        roleMapper.updateRole(role);
     }
 
     @Override
     public void delRoleById(Integer roleId) {
         roleMapper.delRoleById(roleId);
+    }
+
+    @Override
+    public Role selectByUserPhone(String phone) {
+        return roleMapper.selectByUserPhone(phone);
     }
 
     @Override

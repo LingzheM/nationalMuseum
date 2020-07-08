@@ -44,13 +44,26 @@
   <select id="selectByRoleId" parameterType="java.lang.Integer" resultType="Role">
     select * from role where roleId = #{roleId, jdbcType=INTEGER}
   </select>
+  <select id="selectByUserPhone" parameterType="java.lang.String" resultType="Role">
+    select role.roleId, role.roleName, role.description, role.type
+    from role join
+    (user join user_role on user.userId = user_role.userId)
+    on role.roleId = user_role.roleId
+    where user.phone = #{phone, jdbcType=VARCHAR}
+  </select>
   <update id="updateRole" parameterType="Role">
-    update role set roleName = #{roleName}, description = #{description} where roleId = #{roleId}
+    update role
+    <trim prefix="set" suffixOverrides=",">
+      <if test="roleName!=null">roleName=#{roleName},</if>
+      <if test="description!=null">description=#{description},</if>
+      <if test="type!=null">type=#{type},</if>
+    </trim>
+    WHERE roleId=#{roleId}
   </update>
   <delete id="delRoleById" parameterType="java.lang.Integer">
     delete from role where roleId = #{roleId}
   </delete>
   <select id="selectAll" resultMap="BaseResultMap">
-    select * from role;
+    select * from role
   </select>
 </mapper>

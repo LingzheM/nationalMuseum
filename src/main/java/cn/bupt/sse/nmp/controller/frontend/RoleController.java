@@ -7,8 +7,13 @@ import cn.bupt.sse.nmp.entity.RolePermission;
 import cn.bupt.sse.nmp.result.CodeMsg;
 import cn.bupt.sse.nmp.result.Result;
 import cn.bupt.sse.nmp.service.RoleService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javafx.beans.binding.ObjectExpression;
 import javafx.geometry.Pos;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +28,8 @@ import java.util.Map;
  **/
 @RestController
 @RequestMapping(value = "/role")
+@RequiresRoles("super admin")
+@Api(tags = "角色管理")
 public class RoleController {
     @Autowired
     private RoleService roleService;
@@ -31,7 +38,7 @@ public class RoleController {
      * @param map 存储roleId ：角色ID ; permIds: 权限的集合
      * @return
      */
-    @RequestMapping(value = "/assignPerms",method = RequestMethod.PUT)
+    @PostMapping(value = "/assignPerms")
     public Result assignPerms(@RequestBody Map<String, Object> map){
         Integer roleId = (Integer) map.get("roleId");
         List<Integer> permIds = (List<Integer>) map.get("permIds");
@@ -44,7 +51,8 @@ public class RoleController {
      * @param role Role
      * @return
      */
-    @RequestMapping(value = "/addRole",method = RequestMethod.POST)
+    @ApiOperation(value = "添加角色", notes = "无需添加角色Id")
+    @PostMapping(value = "/addRole")
     public Result addRole(@RequestBody Role role){
         roleService.addRole(role);
         return Result.success("");
@@ -55,7 +63,8 @@ public class RoleController {
      * @param role
      * @return
      */
-    @RequestMapping(value = "/updateRole",method = RequestMethod.PUT)
+    @ApiOperation(value = "修改角色")
+    @PostMapping(value = "/updateRole")
     public Result updateRole(@RequestBody Role role){
         roleService.updateRole(role);
         return Result.success("");
@@ -66,16 +75,26 @@ public class RoleController {
      * @param roleId
      * @return
      */
-    @RequestMapping(value = "/delRole",method = RequestMethod.DELETE)
+    @ApiOperation(value = "根据id删除角色")
+    @PostMapping(value = "/delRole")
     public Result delRoleById(@RequestParam  Integer roleId){
         roleService.delRoleById(roleId);
         return Result.success("");
     }
 
-    @RequestMapping(value = "selectAll",method = RequestMethod.GET)
-    public Result selectAll(){
-        List<Role> roles = roleService.selectAll();
-        return Result.success(roles);
+    /**
+     *查找角色
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @ApiOperation(value = "查询所有角色")
+    @GetMapping(value = "selectAll")
+    public Result selectAll(@RequestParam(defaultValue = "1") int pageNum,
+                            @RequestParam(defaultValue = "10") int pageSize){
+        PageHelper.startPage(pageNum,pageSize);
+        PageInfo<Role> pageInfo = new PageInfo<>(roleService.selectAll());
+        return Result.success(pageInfo);
     }
 
 }

@@ -46,4 +46,19 @@
       </if>
     </trim>
   </insert>
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from permission where permissionId = #{permissionId}
+  </delete>
+  <update id="update" parameterType="cn.bupt.sse.nmp.entity.Permission">
+    update permission
+    <trim prefix="set" suffixOverrides=",">
+      <if test="permissionName!=null">permissionName=#{permissionName},</if>
+      <if test="type!=null">type=#{type},</if>
+      <if test="description!=null">description=#{description},</if>
+    </trim>
+    WHERE permissionId=#{permissionId}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from permission
+  </select>
 </mapper>
