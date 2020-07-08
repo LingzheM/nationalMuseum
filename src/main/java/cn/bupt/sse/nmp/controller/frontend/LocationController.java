@@ -8,6 +8,7 @@ import cn.bupt.sse.nmp.util.HttpUtils;
 
 import cn.bupt.sse.nmp.util.RedisUtil;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,7 +66,7 @@ public class LocationController {
      * @throws NoSuchAlgorithmException
      */
 
-
+    
     @RequestMapping(value = "/req",method = RequestMethod.POST)
     public void LocRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, KeyManagementException, NoSuchAlgorithmException {
         JSONObject requestParamJsonObject = HttpUtils.getRequestPostBytes(request);
@@ -99,7 +100,6 @@ public class LocationController {
         String body = HttpUtils.getResponseString(in);
         //修改redis中的客户的相关信息，并且存储 用户身份类别“usertype” 身边的需要提醒的展品信息exhibition
         body = locationService.saveToRedis(body);
-//
         //判断定位点最近的
         HttpUtils.outResult(response, body);
 

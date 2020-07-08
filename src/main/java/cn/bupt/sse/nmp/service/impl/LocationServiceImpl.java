@@ -47,7 +47,7 @@ public class LocationServiceImpl implements LocationService {
         //判断是否是用户当前的首次定位（判断redis中存储的活跃用户中是否存在当前定位的用户）
         if(!userExist){
             //得到定位用户的身份类别
-            Integer roleType = roleMapper.selectTypeByUserId(2);
+            String roleType = roleMapper.selectTypeByUserId(2);
 //            Integer roleType = roleMapper.selectTypeByUserId(Integer.parseInt(userId));
             jsonBody.put("usertype",roleType);
             //到访人数+1
@@ -89,12 +89,16 @@ public class LocationServiceImpl implements LocationService {
                     exhibitionVisitInfo.setUserId(Integer.parseInt(userId));
                     exhibitionVisitInfo.setExhibitionId(eId);
                     exhibitionVisitInfoMapper.insert(exhibitionVisitInfo);
+                    //修改redis中的
                     if(nearbyExhibition == null){
                         RedisUtil.hdel(RedisUtil.ACTIVE_USER_EXHIBIT,userId);
                         jsonBody.put("exhibition",null);
                     }else{
                         Integer exhibitionId = nearbyExhibition.getExhibitionId();
-                        RedisUtil.hset(RedisUtil.ACTIVE_USER_EXHIBIT,userId,exhibitionId);
+                        JSONObject exhibitionJson = new JSONObject();
+                        exhibitionJson.put("eId",exhibitionId);
+                        exhibitionJson.put("sTime",timestamp);
+                        RedisUtil.hset(RedisUtil.ACTIVE_USER_EXHIBIT,userId,exhibitionJson.toJSONString());
                         jsonBody.put("exhibition",nearbyExhibition);
                     }
                 }

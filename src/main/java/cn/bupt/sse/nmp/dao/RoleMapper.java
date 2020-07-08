@@ -19,5 +19,5 @@ public interface RoleMapper {
 
     List<Role> selectAll();
 
-    Integer selectTypeByUserId(Integer userId);
+    String selectTypeByUserId(Integer userId);
 }

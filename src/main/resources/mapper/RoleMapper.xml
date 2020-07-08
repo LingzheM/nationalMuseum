@@ -6,13 +6,13 @@
       <arg column="roleId" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="roleName" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="description" javaType="java.lang.String" jdbcType="VARCHAR" />
-      <arg column="type" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <insert id="insert" parameterType="cn.bupt.sse.nmp.entity.Role">
     insert into role (roleId, roleName, description,type
       )
-    values (#{roleId,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}
+    values (#{roleId,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.Role">
@@ -54,7 +54,7 @@
     select * from role
   </select>
 
-  <select id="selectTypeByUserId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+  <select id="selectTypeByUserId" resultType="java.lang.String" parameterType="java.lang.Integer">
       select type from user, user_role, role where user .userId = user_role.userId and role.roleId = user_role.roleId and user.userId = #{roleId}
   </select>
 </mapper>
