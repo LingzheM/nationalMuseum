@@ -9,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ public class UserLoginController {
      * @return
      */
     @ApiOperation(value = "用户注册", notes = "无需添加用户id和创建时间")
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/register")
     public Result<Integer> register(@RequestBody User user) {
         Result<Integer> result = userService.UserRegister(user);
