@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bupt.sse.nmp.dao.UserNumInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.bupt.sse.nmp.entity.UserNumInfo">
+    <constructor>
+      <arg column="userNumId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="buildingId" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="floor" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="number" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="cn.bupt.sse.nmp.entity.UserNumInfo">
+    insert into user_num_info (userNumId, buildingId, floor, 
+      type, time, number
+      )
+    values (#{userNumId,jdbcType=INTEGER}, #{buildingId,jdbcType=VARCHAR}, #{floor,jdbcType=INTEGER}, 
+      #{type,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{number,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.UserNumInfo">
+    insert into user_num_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userNumId != null">
+        userNumId,
+      </if>
+      <if test="buildingId != null">
+        buildingId,
+      </if>
+      <if test="floor != null">
+        floor,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="number != null">
+        number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userNumId != null">
+        #{userNumId,jdbcType=INTEGER},
+      </if>
+      <if test="buildingId != null">
+        #{buildingId,jdbcType=VARCHAR},
+      </if>
+      <if test="floor != null">
+        #{floor,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="number != null">
+        #{number,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

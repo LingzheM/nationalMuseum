@@ -18,4 +18,6 @@ public interface RoleMapper {
     void delRoleById(Integer roleId);
 
     List<Role> selectAll();
+
+    Integer selectTypeByUserId(Integer userId);
 }
