@@ -52,7 +52,7 @@ public class RoleController {
      * @return
      */
     @ApiOperation(value = "添加角色", notes = "无需添加角色Id")
-    @PostMapping(value = "/addRole")
+    @PostMapping(value = "/add")
     public Result addRole(@RequestBody Role role){
         roleService.addRole(role);
         return Result.success("");
@@ -64,7 +64,7 @@ public class RoleController {
      * @return
      */
     @ApiOperation(value = "修改角色")
-    @PostMapping(value = "/updateRole")
+    @PostMapping(value = "/update")
     public Result updateRole(@RequestBody Role role){
         roleService.updateRole(role);
         return Result.success("");
@@ -72,13 +72,13 @@ public class RoleController {
 
     /**
      * 按照id删除角色
-     * @param roleId
+     * @param
      * @return
      */
     @ApiOperation(value = "根据id删除角色")
-    @PostMapping(value = "/delRole")
-    public Result delRoleById(@RequestParam  Integer roleId){
-        roleService.delRoleById(roleId);
+    @PostMapping(value = "/delete")
+    public Result delRoleById(@RequestBody  Role role){
+        roleService.delRoleById(role.getRoleId());
         return Result.success("");
     }
 
