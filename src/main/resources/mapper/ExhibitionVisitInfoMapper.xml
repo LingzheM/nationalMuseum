@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bupt.sse.nmp.dao.ExhibitionVisitInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.bupt.sse.nmp.entity.ExhibitionVisitInfo">
+    <constructor>
+      <arg column="exhibitionId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="startTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="endTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="userId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="visitId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="cn.bupt.sse.nmp.entity.ExhibitionVisitInfo">
+    insert into exhibition_visit_info (exhibitionId, startTime, endTime, 
+      userId, visitId)
+    values (#{exhibitionId,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{userId,jdbcType=INTEGER}, #{visitId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.ExhibitionVisitInfo">
+    insert into exhibition_visit_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="exhibitionId != null">
+        exhibitionId,
+      </if>
+      <if test="startTime != null">
+        startTime,
+      </if>
+      <if test="endTime != null">
+        endTime,
+      </if>
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="visitId != null">
+        visitId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="exhibitionId != null">
+        #{exhibitionId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="visitId != null">
+        #{visitId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>
