@@ -13,6 +13,17 @@
       <arg column="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
+  <resultMap id="userResultMap" type="Map">
+    <id property="userId" column="userId" />
+    <result property="username" column="userName"/>
+    <result property="phone" column="phone"/>
+    <result property="status" column="status"/>
+    <result property="age" column="age"/>
+    <result property="sex" column="sex"/>
+    <result property="createTime" column="createTime"/>
+    <result property="roleId" column="roleId"/>
+    <result property="roleName" column="roleName"/>
+  </resultMap>
   <insert id="insert" parameterType="cn.bupt.sse.nmp.entity.User">
     insert into user (userId, userName, phone, 
       password, status, age, 
@@ -77,7 +88,39 @@
     </trim>
   </insert>
   
+  <select id="selectUser" parameterType="java.lang.String" resultMap="userResultMap">
+    select
+    user.userId as userId,
+    user.userName as userName,
+    user.phone as phone,
+    user.status as status,
+    user.age as age,
+    user.sex as sex,
+    user.createTime as createTime,
+    role.roleId as roleId,
+    role.roleName as roleName
+    from role right join
+    (user left join user_role on user.userId = user_role.userId)
+    on role.roleId = user_role.roleId
+    where user.phone like concat('%',#{userPhone},'%')
+    or user.userName like concat('%',#{userPhone},'%')
+    or role.roleName like concat('%',#{userPhone},'%')
+  </select>
   <select id="selectByUserPhone" parameterType="java.lang.String" resultType="cn.bupt.sse.nmp.entity.User">
     select * from user where phone = #{userPhone}
   </select>
+  <update id="updateUser" parameterType="User">
+    update user
+    <trim prefix="set" suffixOverrides=",">
+      <if test="userName!=null">userName=#{userName},</if>
+      <if test="phone!=null">phone=#{phone},</if>
+      <if test="age!=null">age=#{age},</if>
+      <if test="sex!=null">sex=#{sex},</if>
+      <if test="status!=null">status=#{status},</if>
+    </trim>
+    WHERE userId=#{userId}
+  </update>
+  <delete id="deleteUserById" parameterType="java.lang.Integer">
+    delete from user where userId = #{userId}
+  </delete>
 </mapper>

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * 权限管理
  */
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/permission")
 @RequiresRoles("super admin")
 @Api(tags = "权限管理")
 public class PermissionController {
@@ -29,7 +29,7 @@ public class PermissionController {
      * @return
      */
     @ApiOperation(value = "添加权限", notes = "无需填写permissionId")
-    @PostMapping(value = "addPermission")
+    @PostMapping(value = "add")
     public Result addPermission(@RequestBody Permission permission){
         permissionService.addPermission(permission);
         return Result.success("");
@@ -41,7 +41,7 @@ public class PermissionController {
      * @return
      */
     @ApiOperation(value = "根据id删除权限")
-    @PostMapping(value = "deletePermission")
+    @PostMapping(value = "delete")
     public Result deletePermission(@RequestParam Integer permissionId){
         permissionService.deletePermission(permissionId);
         return Result.success("");
@@ -53,7 +53,7 @@ public class PermissionController {
      * @return
      */
     @ApiOperation(value = "修改权限")
-    @PostMapping(value = "updatePermission")
+    @PostMapping(value = "update")
     public Result updatePermission(@RequestBody Permission permission){
         permissionService.updatePermission(permission);
         return Result.success("");
@@ -66,7 +66,7 @@ public class PermissionController {
      * @return
      */
     @ApiOperation(value = "查询全部权限")
-    @GetMapping(value = "selectPermission")
+    @GetMapping(value = "select")
     public Result selectPermission(@RequestParam(defaultValue = "1") int pageNum,
                                    @RequestParam(defaultValue = "10") int pageSize){
         PageHelper.startPage(pageNum,pageSize);
