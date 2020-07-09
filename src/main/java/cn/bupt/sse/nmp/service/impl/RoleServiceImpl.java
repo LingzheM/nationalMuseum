@@ -5,11 +5,13 @@ import cn.bupt.sse.nmp.dao.RolePermissionMapper;
 import cn.bupt.sse.nmp.entity.Role;
 import cn.bupt.sse.nmp.entity.RolePermission;
 import cn.bupt.sse.nmp.service.RoleService;
+import com.mysql.cj.jdbc.integration.jboss.ExtendedMysqlExceptionSorter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: nationalMuseum
@@ -29,11 +31,9 @@ public class RoleServiceImpl implements RoleService {
 
 
     @Override
-    public void assignPerms(Integer roleId, List<Integer> permIds) {
-        for (Integer permId : permIds) {
-            RolePermission rolePermission = new RolePermission(roleId, permId);
-            rolePermissionMapper.insert(rolePermission);
-        }
+    public void assignPerms(Map<String, Object> map){
+        rolePermissionMapper.delete((Integer)map.get("roleId"));
+        rolePermissionMapper.insert(map);
     }
 
     @Override

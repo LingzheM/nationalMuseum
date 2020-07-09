@@ -11,6 +11,13 @@
     insert into user_role (userId, roleId)
     values (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER})
   </insert>
+  <update id="update" parameterType="cn.bupt.sse.nmp.entity.UserRole">
+    update user_role
+    <trim prefix="set" suffixOverrides=",">
+      <if test="roleId!=null">roleId=#{roleId},</if>
+    </trim>
+    WHERE userId=#{userId}
+  </update>
   <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.UserRole">
     insert into user_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
