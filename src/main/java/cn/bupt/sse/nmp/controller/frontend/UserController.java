@@ -1,7 +1,9 @@
 package cn.bupt.sse.nmp.controller.frontend;
 
 import cn.bupt.sse.nmp.entity.User;
+import cn.bupt.sse.nmp.entity.UserRole;
 import cn.bupt.sse.nmp.result.Result;
+import cn.bupt.sse.nmp.service.UserRoleService;
 import cn.bupt.sse.nmp.service.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,6 +26,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRoleService userRoleService;
+
     @ApiOperation(value = "查询用户", notes = "根据用户名，角色名，角色手机号进行模糊查询")
     @GetMapping(value = "select")
     public Result selectAll(@RequestParam(defaultValue = "1") int pageNum,
@@ -45,6 +50,13 @@ public class UserController {
     @PostMapping(value = "/delete")
     public Result delRoleById(@RequestBody User user){
         userService.deleteUserById(user.getUserId());
+        return Result.success("");
+    }
+
+    @ApiOperation(value = "修改用户的角色")
+    @PostMapping(value = "/updateRole")
+    public Result updateUserRole(@RequestBody UserRole userRole){
+        userRoleService.update(userRole);
         return Result.success("");
     }
 
