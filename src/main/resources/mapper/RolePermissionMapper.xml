@@ -7,9 +7,11 @@
       <arg column="permissionId" javaType="java.lang.Integer" jdbcType="INTEGER" />
     </constructor>
   </resultMap>
-  <insert id="insert" parameterType="cn.bupt.sse.nmp.entity.RolePermission">
-    insert into role_permission (roleId, permissionId)
-    values (#{roleId,jdbcType=INTEGER}, #{permissionId,jdbcType=INTEGER})
+  <insert id="insert" parameterType="java.util.Map">
+    insert into role_permission(roleId,permissionId) values
+    <foreach collection="permissionIds" item="permissionId" index="index" separator=",">
+      (#{roleId,jdbcType=INTEGER},#{permissionId,jdbcType=INTEGER})
+    </foreach>
   </insert>
   <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.RolePermission">
     insert into role_permission
@@ -33,4 +35,7 @@
   <select id="selectPermIdsByRoleId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
     select permissionId from role_permission where roleId = #{roleId}
   </select>
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from role_permission where roleId = #{roleId}
+  </delete>
 </mapper>

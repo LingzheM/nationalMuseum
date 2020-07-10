@@ -15,6 +15,7 @@ import javafx.beans.binding.ObjectExpression;
 import javafx.geometry.Pos;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,16 +34,12 @@ import java.util.Map;
 public class RoleController {
     @Autowired
     private RoleService roleService;
-    /**
-     * 授予角色权限
-     * @param map 存储roleId ：角色ID ; permIds: 权限的集合
-     * @return
-     */
+
     @PostMapping(value = "/assignPerms")
+    @ApiOperation(value = "修改角色权限", notes = "传入roleId(角色Id)和permissionIds(权限Id的list)")
+    @Transactional(rollbackFor = Exception.class)
     public Result assignPerms(@RequestBody Map<String, Object> map){
-        Integer roleId = (Integer) map.get("roleId");
-        List<Integer> permIds = (List<Integer>) map.get("permIds");
-        roleService.assignPerms(roleId,permIds);
+        roleService.assignPerms(map);
         return Result.success("");
     }
 
@@ -52,7 +49,7 @@ public class RoleController {
      * @return
      */
     @ApiOperation(value = "添加角色", notes = "无需添加角色Id")
-    @PostMapping(value = "/addRole")
+    @PostMapping(value = "/add")
     public Result addRole(@RequestBody Role role){
         roleService.addRole(role);
         return Result.success("");
@@ -64,7 +61,7 @@ public class RoleController {
      * @return
      */
     @ApiOperation(value = "修改角色")
-    @PostMapping(value = "/updateRole")
+    @PostMapping(value = "/update")
     public Result updateRole(@RequestBody Role role){
         roleService.updateRole(role);
         return Result.success("");
@@ -72,13 +69,13 @@ public class RoleController {
 
     /**
      * 按照id删除角色
-     * @param roleId
+     * @param
      * @return
      */
-    @ApiOperation(value = "根据id删除角色")
-    @PostMapping(value = "/delRole")
-    public Result delRoleById(@RequestParam  Integer roleId){
-        roleService.delRoleById(roleId);
+    @ApiOperation(value = "根据id删除角色", notes = "只需传入roleId")
+    @PostMapping(value = "/delete")
+    public Result delRoleById(@RequestBody  Role role){
+        roleService.delRoleById(role.getRoleId());
         return Result.success("");
     }
 
