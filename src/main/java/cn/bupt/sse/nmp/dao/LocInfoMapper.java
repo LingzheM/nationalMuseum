@@ -6,4 +6,6 @@ public interface LocInfoMapper {
     int insert(LocInfo record);
 
     int insertSelective(LocInfo record);
+
+    Integer selectMaxfreqByUserId(Integer userId);
 }

@@ -1,16 +1,26 @@
 package cn.bupt.sse.nmp.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
+@ApiModel("展品被参观记录模型")
 public class ExhibitionVisitInfo {
+
+    @ApiModelProperty("展品Id")
     private Integer exhibitionId;
 
+    @ApiModelProperty("参观开始时间")
     private Date startTime;
 
+    @ApiModelProperty("参观结束时间")
     private Date endTime;
 
+    @ApiModelProperty("用户Id")
     private Integer userId;
 
+    @ApiModelProperty("参观记录Id")
     private Integer visitId;
 
     public ExhibitionVisitInfo(Integer exhibitionId, Date startTime, Date endTime, Integer userId, Integer visitId) {

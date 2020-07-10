@@ -25,6 +25,11 @@ public class RedisUtil {
     //游客上次访问的楼层
     public static final String  ACTIVE_USER_FLOOR= "floor";
     public static final String  PERSON_NUMBER= "personNumber";
+    //判定游客离开的时间间隔
+    public static final Integer LEAVE_TIME = 5;
+    //判断游客到达展品的距离
+    public static final Integer USER_EXHIBITION_DISTANCE = 30;
+
 
 
 
@@ -499,6 +504,24 @@ public class RedisUtil {
     }
 
     /**
+     * 获取列表中的全部元素
+     * @param key
+     * @return
+     */
+    public static String lindex(String key,long index){
+        Jedis jedis = null;
+        try{
+            jedis = RedisUtil.getJedis();
+            return jedis.lindex(key,index);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            RedisUtil.returnResource(jedis);
+        }
+    }
+
+    /**
      * 想hash中添加整型元素
      * @param key
      * @return
@@ -516,7 +539,7 @@ public class RedisUtil {
         }
     }
     /**
-     * 想hash中添加时间戳元素
+     * 想hash中添加时间值
      * @param key
      * @return
      */
@@ -533,7 +556,7 @@ public class RedisUtil {
         }
     }
     /**
-     * 想hash中添加时间戳元素
+     * 想hash中添加元素
      * @param key
      * @return
      */
@@ -551,7 +574,7 @@ public class RedisUtil {
     }
 
     /**
-     * 想hash中添加整型元素
+     * 判断hash中是否存在
      * @param key
      * @return
      */
@@ -586,7 +609,13 @@ public class RedisUtil {
         }
     }
 
-    public static Long hdel(String key,String field){
+    /**
+     * 删除hash中的值
+     * @param key
+     * @param field
+     * @return
+     */
+    public static Long hdel(String key,String... field){
         Jedis jedis = null;
         try{
             jedis = RedisUtil.getJedis();
@@ -599,7 +628,7 @@ public class RedisUtil {
         }
     }
     /**
-     * 想hash中添加整型元素
+     * 获取hash的长度
      * @param key
      * @return
      */
@@ -616,7 +645,7 @@ public class RedisUtil {
         }
     }
     /**
-     * 想hash中添加整型元素
+     * 获取hash中的所有键
      * @param key
      * @return
      */
@@ -633,7 +662,7 @@ public class RedisUtil {
         }
     }
     /**
-     * 想hash中添加整型元素
+     *批量获取hash中的key
      * @param key
      * @return
      */
@@ -650,7 +679,7 @@ public class RedisUtil {
         }
     }
     /**
-     * 想hash中添加整型元素
+     * hash中所有的值
      * @param key
      * @return
      */

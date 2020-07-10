@@ -8,15 +8,14 @@ import cn.bupt.sse.nmp.util.HttpUtils;
 
 import cn.bupt.sse.nmp.util.RedisUtil;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpRequest;
+import org.springframework.web.bind.annotation.*;
 import redis.clients.util.JedisURIHelper;
 
 import javax.servlet.ServletResponse;
@@ -39,6 +38,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping(value = "/loc")
+@Api(tags = "定位管理")
 public class LocationController {
     @Value("${locationserver.url}")
     String address;
@@ -46,7 +46,6 @@ public class LocationController {
     @Autowired
     private LocationService locationService;
     @RequestMapping(value = "/socket/push/{cid}")
-
     public Result pushToWeb(@PathVariable String cid, String message){
 //        try {
 ////            WebSocketServer.sendInfo(message,cid);
@@ -66,44 +65,18 @@ public class LocationController {
      * @throws NoSuchAlgorithmException
      */
 
-    
-    @RequestMapping(value = "/req",method = RequestMethod.POST)
+    @ApiOperation("处理app定位请求")
+    @PostMapping(value = "/req")
     public void LocRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, KeyManagementException, NoSuchAlgorithmException {
-        JSONObject requestParamJsonObject = HttpUtils.getRequestPostBytes(request);
-        String key = requestParamJsonObject.getString("appkey");
-        String sign = requestParamJsonObject.getString("sign");
-        //创建和定位服务器http1.1连接
-        URL url = new URL(address);
-        HttpURLConnection conn = null;
-        OutputStream out = null;
-        InputStream in = null;
-        OutputStreamWriter ow = null;
-        //如果访问的是https，取消证书验证
-        if (url.getProtocol().toLowerCase(Locale.ROOT).equals("https")) {
-            conn = HttpUtils.notVarify(conn,url);
-        } else {
-            conn = (HttpURLConnection) url.openConnection();
-        }
-        Map<String,Object> map = new HashMap<>();
-        map.put("key",key);
-        map.put("sign",sign);
-        //设置请求属性
-        HttpUtils.setRequestParameter(map,conn);
-        conn.connect();
-        //向定位服务器发送定位请求
-        out = conn.getOutputStream();
-        ow = new OutputStreamWriter(out);
-        ow.write(requestParamJsonObject.toString());
-        ow.flush();
-        //收到定位结果
-        in = conn.getInputStream();
-        String body = HttpUtils.getResponseString(in);
+        //转发定位请求到定位服务器
+        String body = locationService.sendToHuaweiServer(request,address);
         //修改redis中的客户的相关信息，并且存储 用户身份类别“usertype” 身边的需要提醒的展品信息exhibition
         body = locationService.saveToRedis(body);
-        //判断定位点最近的
+        //返回给app定位结果
         HttpUtils.outResult(response, body);
 
     }
+
 
 
 
