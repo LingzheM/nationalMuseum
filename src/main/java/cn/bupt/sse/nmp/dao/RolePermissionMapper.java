@@ -4,9 +4,12 @@ import cn.bupt.sse.nmp.entity.RolePermission;
 import org.omg.PortableInterceptor.INACTIVE;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RolePermissionMapper {
-    int insert(RolePermission record);
+    int insert(Map<String, Object> map);
+
+    void delete(Integer roleId);
 
     int insertSelective(RolePermission record);
 
