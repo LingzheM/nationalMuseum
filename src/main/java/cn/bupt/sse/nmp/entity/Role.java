@@ -12,17 +12,17 @@ public class Role {
     @ApiModelProperty("角色描述")
     private String description;
     @ApiModelProperty("角色类型")
-    private Integer type;
+    private String type;
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public Role(Integer roleId, String roleName, String description, Integer type) {
+    public Role(Integer roleId, String roleName, String description, String type) {
         this.roleId = roleId;
         this.roleName = roleName;
         this.description = description;

@@ -1,22 +1,38 @@
 package cn.bupt.sse.nmp.entity;
 
-import java.util.Date;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+@ApiModel("用户数量统计模型")
 public class UserNumInfo {
+    @ApiModelProperty("用户数量Id")
     private Integer userNumId;
 
+    @ApiModelProperty("楼宇Id")
     private String buildingId;
 
+    @ApiModelProperty("楼层")
     private Integer floor;
 
+    @ApiModelProperty("用户类别")
     private String type;
 
+    @ApiModelProperty("统计时间")
     private Date time;
 
+    @ApiModelProperty("新增用户数量")
     private Integer number;
 
     public UserNumInfo(Integer userNumId, String buildingId, Integer floor, String type, Date time, Integer number) {
         this.userNumId = userNumId;
+        this.buildingId = buildingId;
+        this.floor = floor;
+        this.type = type;
+        this.time = time;
+        this.number = number;
+    }
+    public UserNumInfo(String buildingId, Integer floor, String type, Date time, Integer number) {
         this.buildingId = buildingId;
         this.floor = floor;
         this.type = type;

@@ -1,22 +1,35 @@
 package cn.bupt.sse.nmp.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel("展品模型")
 public class Exhibition {
+    @ApiModelProperty("展品Id")
     private Integer exhibitionId;
 
+    @ApiModelProperty("展品名称")
     private String exhibitionName;
 
+    @ApiModelProperty("展品X坐标")
     private Double positionX;
 
+    @ApiModelProperty("展品Y坐标")
     private Double positionY;
 
+    @ApiModelProperty("展品所在楼层")
     private Integer floor;
 
+    @ApiModelProperty("展品类别")
     private String type;
 
+    @ApiModelProperty("展品所在楼宇Id")
     private String buildingId;
 
+    @ApiModelProperty("展品描述")
     private String description;
 
+    @ApiModelProperty("展品图片地址")
     private String picture;
 
     public Exhibition(Integer exhibitionId, String exhibitionName, Double positionX, Double positionY, Integer floor, String type, String buildingId, String description, String picture) {
