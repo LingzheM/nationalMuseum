@@ -11,6 +11,7 @@
       <arg column="age" javaType="java.lang.Byte" jdbcType="TINYINT" />
       <arg column="sex" javaType="java.lang.String" jdbcType="CHAR" />
       <arg column="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="salt" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <resultMap id="userResultMap" type="Map">
@@ -25,12 +26,10 @@
     <result property="roleName" column="roleName"/>
   </resultMap>
   <insert id="insert" parameterType="cn.bupt.sse.nmp.entity.User">
-    insert into user (userId, userName, phone, 
-      password, status, age, 
-      sex, createTime)
+    insert into user (userId, userName, phone, password, status, age, sex, createTime, salt)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
       #{password,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{age,jdbcType=TINYINT}, 
-      #{sex,jdbcType=CHAR}, now())
+      #{sex,jdbcType=CHAR}, now(), #{salt,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.User">
     insert into user

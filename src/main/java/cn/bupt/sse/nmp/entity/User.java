@@ -31,7 +31,11 @@ public class User {
     @ApiModelProperty("用户创建时间")
     private Date createTime;
 
-    public User(Integer userId, String userName, String phone, String password, Byte status, Byte age, String sex, Date createTime) {
+    @ApiModelProperty("盐")
+    private String salt;
+
+
+    public User(Integer userId, String userName, String phone, String password, Byte status, Byte age, String sex, Date createTime, String salt) {
         this.userId = userId;
         this.userName = userName;
         this.phone = phone;
@@ -40,6 +44,7 @@ public class User {
         this.age = age;
         this.sex = sex;
         this.createTime = createTime;
+        this.salt = salt;
     }
 
     public User() {
@@ -108,5 +113,13 @@ public class User {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt == null ? null : salt.trim();
     }
 }
