@@ -9,5 +9,5 @@ public interface ExhibitionMapper {
 
     int insertSelective(Exhibition record);
 
-    List<Exhibition> selectByFloorAndBuild(String floor, String buildingId);
+    List<Exhibition> selectByFloorAndBuild(Integer floor, String buildingId);
 }

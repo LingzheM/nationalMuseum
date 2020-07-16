@@ -53,4 +53,7 @@
       </if>
     </trim>
   </insert>
+  <select id="selectTopEidByDay" resultType="Map">
+    select exhibitionId, count(*) counts from exhibition_visit_info where TO_DAYS(startTime) = TO_DAYS(NOW()) and TO_DAYS(endTime) =TO_DAYS(NOW()) GROUP BY exhibitionId ORDER BY counts DESC limit #{number}
+  </select>
 </mapper>

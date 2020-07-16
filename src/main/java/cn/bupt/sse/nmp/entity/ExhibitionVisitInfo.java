@@ -30,6 +30,12 @@ public class ExhibitionVisitInfo {
         this.userId = userId;
         this.visitId = visitId;
     }
+    public ExhibitionVisitInfo(Integer exhibitionId, Date startTime, Date endTime, Integer userId) {
+        this.exhibitionId = exhibitionId;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.userId = userId;
+    }
 
     public ExhibitionVisitInfo() {
         super();

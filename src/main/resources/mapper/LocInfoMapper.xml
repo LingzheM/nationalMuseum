@@ -14,7 +14,7 @@
       <arg column="frequency" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="buildingId" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="exhibitionId" javaType="java.lang.Integer" jdbcType="INTEGER" />
-      <arg column="type" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <insert id="insert" parameterType="cn.bupt.sse.nmp.entity.LocInfo">
@@ -26,7 +26,7 @@
     values (#{locId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{locationTime,jdbcType=TIMESTAMP}, 
       #{locationX,jdbcType=DOUBLE}, #{locationY,jdbcType=DOUBLE}, #{gpsX,jdbcType=DOUBLE}, 
       #{gpsY,jdbcType=DOUBLE}, #{floor,jdbcType=INTEGER}, #{frequency,jdbcType=INTEGER}, 
-      #{buildingId,jdbcType=VARCHAR}, #{exhibitionId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}
+      #{buildingId,jdbcType=VARCHAR}, #{exhibitionId,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.bupt.sse.nmp.entity.LocInfo">
@@ -108,5 +108,16 @@
       </if>
     </trim>
   </insert>
-
+<select id="selectMaxfreqByUserId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+  select max(frequency) from loc_info where userId = #{userId};
+</select>
+  <select id="selectLastTraceByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select *
+    from loc_info
+    where
+     userId = #{userId}
+    and
+    frequency = (select max(frequency) from loc_info where userId = #{userId} )
+    order by locationTime asc
+  </select>
 </mapper>

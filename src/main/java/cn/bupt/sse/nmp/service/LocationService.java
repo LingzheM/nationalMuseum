@@ -1,5 +1,7 @@
 package cn.bupt.sse.nmp.service;
 
+import com.alibaba.fastjson.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -11,5 +13,5 @@ public interface LocationService {
 
     String saveToRedis(String body);
 
-    String sendToHuaweiServer(HttpServletRequest request,String address) throws IOException, NoSuchAlgorithmException, KeyManagementException;
+    String findExhibition(JSONObject jsonBody);
 }

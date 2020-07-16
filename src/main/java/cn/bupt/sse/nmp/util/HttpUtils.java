@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.net.ssl.*;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
@@ -15,6 +16,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -25,6 +28,42 @@ import java.util.Map;
  **/
 @Slf4j
 public class HttpUtils {
+
+
+    public static String sendToHuaweiServer(HttpServletRequest request, String address) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        JSONObject requestParamJsonObject = getRequestPostBytes(request);
+        String key = requestParamJsonObject.getString("appkey");
+        String sign = requestParamJsonObject.getString("sign");
+        //创建和定位服务器http1.1连接
+        URL url = new URL(address);
+        HttpURLConnection conn = null;
+        OutputStream out = null;
+        InputStream in = null;
+        OutputStreamWriter ow = null;
+        //如果访问的是https，取消证书验证
+        if (url.getProtocol().toLowerCase(Locale.ROOT).equals("https")) {
+            conn = HttpUtils.notVarify(conn,url);
+        } else {
+            conn = (HttpURLConnection) url.openConnection();
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("key",key);
+        map.put("sign",sign);
+        //设置请求属性
+        HttpUtils.setRequestParameter(map,conn);
+        conn.connect();
+        //向定位服务器发送定位请求
+        out = conn.getOutputStream();
+        ow = new OutputStreamWriter(out);
+        ow.write(requestParamJsonObject.toString());
+        ow.flush();
+        //收到定位结果
+        in = conn.getInputStream();
+        String body = HttpUtils.getResponseString(in);
+        return body;
+    }
+
+
     //传入原connection 返回取消验证的connection
     public static HttpURLConnection notVarify(HttpURLConnection conn, URL url) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         HttpsURLConnection https = (HttpsURLConnection) url.openConnection();
@@ -142,6 +181,9 @@ public class HttpUtils {
         in.close();
         return sb.toString();
     }
+
+
+
 
     /**
      * @desc 将定位结果写到返回给app的response中

@@ -16,6 +16,7 @@ import java.util.Date;
  * @create: 2020-07-09 14:31
  **/
 public class BeanUtil {
+    //吧返回app的json变形转换为locInfo实体
     public static LocInfo locJsonToLocInfo(JSONObject json){
         Integer userId = json.getInteger("userId");
         Date timestamp = new Date(json.getLong("timestamp"));
@@ -26,7 +27,7 @@ public class BeanUtil {
         String buildingid = json.getString("buildingid");
         String type = json.getString("usertype");
         Integer exhibitionId = null;
-        if(json.getInteger("exhibition") != null){
+        if(json.containsKey("exhibition")){
            exhibitionId = JSONObject.toJavaObject(JSONObject.parseObject(json.getString("exhibition")), Exhibition.class).getExhibitionId();
         }
         JSONObject gpsLocation = json.getJSONObject("gpslocation");
