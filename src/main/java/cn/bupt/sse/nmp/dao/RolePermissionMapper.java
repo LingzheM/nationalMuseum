@@ -1,7 +1,7 @@
 package cn.bupt.sse.nmp.dao;
 
 import cn.bupt.sse.nmp.entity.RolePermission;
-import org.omg.PortableInterceptor.INACTIVE;
+
 
 import java.util.List;
 import java.util.Map;

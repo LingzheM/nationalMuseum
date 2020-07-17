@@ -18,7 +18,7 @@ import javax.websocket.server.ServerEndpointConfig;
 @Configuration
 public class WebSocketConfig {
     @Bean
-//    @Profile(value = {"dev","test"})
+    @Profile(value = {"dev","test"})
     public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
     }
