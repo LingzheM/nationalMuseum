@@ -13,8 +13,9 @@
 
     <groupId>cn.bupt.sse</groupId>
     <artifactId>nationalMuseum</artifactId>
+    <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <name>nationMuseumProject</name>
+    <name>nationalMuseum</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -22,6 +23,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.locales>zh_CN</project.build.locales>
     </properties>
 
     <dependencies>
@@ -29,12 +31,57 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
+
+        <!--添加servlet的依赖-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -73,11 +120,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-websocket</artifactId>
-            <version>4.3.8.RELEASE</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>2.2.6.RELEASE</version>
+            <scope>provided</scope>
         </dependency>
+
 
         <dependency>
             <groupId>mysql</groupId>
@@ -95,6 +145,10 @@
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.2.10</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -110,21 +164,30 @@
 
 
         <!--Swagger-UI API文档生产工具-->
+        <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.0</version>
+            <version>2.9.2</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.9.0</version>
+            <version>2.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.2.3</version>
         </dependency>
 
 
     </dependencies>
 
     <build>
+        <!--打包时不添加版本号    -->
+        <finalName>nationalMuseum</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -137,8 +200,17 @@
             </resource>
         </resources>
 
+
         <plugins>
-            <!-- mybatis generator插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                    <mainClass>cn.bupt.sse.nmp.NationalMuseumSystemApplication</mainClass>
+                </configuration>
+            </plugin>
+            <!--mybatis generator插件-->
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
@@ -150,34 +222,33 @@
                     <overwrite>true</overwrite>
                     <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.16</version>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-jdbc</artifactId>
-                    </dependency>
-
-                </dependencies>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>cn.bupt.sse.nmp.NationalMuseumSystemApplication</mainClass>
-                </configuration>
                 <executions>
                     <execution>
+                        <id>Generate MyBatis Artifacts</id>
+                        <!--<phase>package</phase>-->
+                        <phase>deploy</phase>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>generate</goal>
                         </goals>
                     </execution>
                 </executions>
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>mysql</groupId>-->
+<!--                        <artifactId>mysql-connector-java</artifactId>-->
+<!--                        <version>8.0.16</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+            </plugin>
+<!--            <-打包插件, 设定war包名称不带版本号 &ndash;&gt;-->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <source>1.8</source>
+                </configuration>
             </plugin>
         </plugins>
     </build>

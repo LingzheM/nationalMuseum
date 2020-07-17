@@ -9,7 +9,6 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @program: nationalMuseum
@@ -538,23 +537,7 @@ public class RedisUtil {
             RedisUtil.returnResource(jedis);
         }
     }
-    /**
-     * 想hash中添加时间值
-     * @param key
-     * @return
-     */
-    public static Long hset(String key,String field,Timestamp data){
-        Jedis jedis = null;
-        try{
-            jedis = RedisUtil.getJedis();
-            return jedis.hset(key,field,String.valueOf(data.toString()));
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }finally {
-            RedisUtil.returnResource(jedis);
-        }
-    }
+
     /**
      * 想hash中添加元素
      * @param key
