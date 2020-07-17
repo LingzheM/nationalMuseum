@@ -69,11 +69,20 @@ public class LocationController {
     @PostMapping(value = "/req")
     public void LocRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, KeyManagementException, NoSuchAlgorithmException {
         //转发定位请求到定位服务器
-        String body = locationService.sendToHuaweiServer(request,address);
-        //修改redis中的客户的相关信息，并且存储 用户身份类别“usertype” 身边的需要提醒的展品信息exhibition
-        body = locationService.saveToRedis(body);
-        //返回给app定位结果
-        HttpUtils.outResult(response, body);
+        String body = HttpUtils.sendToHuaweiServer(request,address);
+        JSONObject jsonBody = JSONObject.parseObject(body);
+        if(!jsonBody.getJSONObject("result").getString("message").equals("success")){
+            HttpUtils.outResult(response, body);
+        }else{
+            //判断是否到达新的展品附近
+            body = locationService.findExhibition(jsonBody);
+            //返回给app定位结果
+            HttpUtils.outResult(response, body);
+            //修改redis中的客户的相关信息，并且存储 用户身份类别“usertype” 身边的需要提醒的展品信息exhibition
+            body = locationService.saveToRedis(body);
+
+        }
+
 
     }
 

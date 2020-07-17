@@ -56,17 +56,10 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public String saveToRedis(String body) {
         JSONObject jsonBody = JSONObject.parseObject(body);
-        if(!jsonBody.getJSONObject("result").getString("message").equals("success")){
-            return body;
-        }
         String userId = jsonBody.getString("userid");
         String floor = jsonBody.getJSONObject("location").getString("z");
         String buildingid = jsonBody.getString("buildingid");
         String timestamp = jsonBody.getString("timestamp");
-        //得到游客周围5m内最近的展品
-        List<Exhibition> exhibitions =  exhibitionMapper.selectByFloorAndBuild(floor,buildingid);
-        Exhibition nearbyExhibition = ExhibitionUtil.NearbyExhibition(exhibitions, jsonBody, RedisUtil.USER_EXHIBITION_DISTANCE);
-
         //判断当前用户是否第一次定位（redis floor中是否存在这个游客的楼层定位信息）
         if(!RedisUtil.hexists(RedisUtil.ACTIVE_USER_FLOOR,userId)){
             //记录定位这上次请求定位所在的楼层
@@ -76,72 +69,23 @@ public class LocationServiceImpl implements LocationService {
 //          Integer roleType = roleMapper.selectTypeByUserId(Integer.parseInt(userId));
             //记录定位者的身份类别到redis方便直接获取相关的统计信息
             RedisUtil.hset(RedisUtil.ACTIVE_USER_TYPE,userId,roleType);
-
             jsonBody.put("usertype",roleType);
-            //到访人数+1
+            //对应楼层的角色类别到访人数+1
             if(RedisUtil.hget(RedisUtil.PERSON_NUMBER,buildingid+"-"+floor) == null){
                 JSONObject pNumJson = new JSONObject();
                 pNumJson.put(roleType,1);
                 RedisUtil.hset(RedisUtil.PERSON_NUMBER,buildingid+"-"+floor,pNumJson.toJSONString());
             }else{
-                    JSONObject pNumJson = JSONObject.parseObject(RedisUtil.hget(RedisUtil.PERSON_NUMBER, buildingid +"-"+ floor));
-                    pNumJson.put(roleType,(Integer)pNumJson.getOrDefault(roleType,0)+1);
-                    RedisUtil.hset(RedisUtil.PERSON_NUMBER,buildingid+"-"+floor,pNumJson.toJSONString());
-
-            }
-            if(nearbyExhibition != null){
-                JSONObject exhibitionJson = new JSONObject();
-                Integer exhibitionId = nearbyExhibition.getExhibitionId();
-                exhibitionJson.put("eId",exhibitionId);
-                exhibitionJson.put("sTime",timestamp);
-                RedisUtil.hset(RedisUtil.ACTIVE_USER_EXHIBIT,userId,exhibitionJson.toJSONString());
-                jsonBody.put("exhibition",JSONObject.toJSONString(nearbyExhibition));
-            }else{
-                jsonBody.put("exhibition",null);
+                JSONObject pNumJson = JSONObject.parseObject(RedisUtil.hget(RedisUtil.PERSON_NUMBER, buildingid +"-"+ floor));
+                pNumJson.put(roleType,(Integer)pNumJson.getOrDefault(roleType,0)+1);
+                RedisUtil.hset(RedisUtil.PERSON_NUMBER,buildingid+"-"+floor,pNumJson.toJSONString());
             }
         }else{
-            //如果有当前用户的定位信息
+            //如果有当前用户的定位信息，判断是否需要更新楼层信息
             String type = RedisUtil.hget(RedisUtil.ACTIVE_USER_TYPE, userId);
             jsonBody.put("usertype",type);
-            //判断楼层和判断展品
-            String visitInfo = RedisUtil.hget(RedisUtil.ACTIVE_USER_EXHIBIT, userId);
-            if(visitInfo == null && nearbyExhibition !=null ){
-                JSONObject exhibitionJson = new JSONObject();
-                Integer exhibitionId = nearbyExhibition.getExhibitionId();
-                exhibitionJson.put("eId",exhibitionId);
-                exhibitionJson.put("sTime",timestamp);
-                RedisUtil.hset(RedisUtil.ACTIVE_USER_EXHIBIT,userId,exhibitionJson.toJSONString());
-                jsonBody.put("exhibition",JSONObject.toJSONString(nearbyExhibition));
-            }else if(visitInfo != null){
-                JSONObject jsonVisit = JSONObject.parseObject(visitInfo);
-                Integer eId = jsonVisit.getInteger("eId");
-                Date sTime = new Date(Long.parseLong(jsonVisit.getString("sTime")));
-                if(nearbyExhibition == null || eId != nearbyExhibition.getExhibitionId()){
-                    //游客离开了上一个参观的展品，吧访问时间 游客id等存库
-                    ExhibitionVisitInfo exhibitionVisitInfo = new ExhibitionVisitInfo();
-                    exhibitionVisitInfo.setStartTime(sTime);
-                    exhibitionVisitInfo.setEndTime(new Date(Long.parseLong(timestamp)));
-//                    exhibitionVisitInfo.setUserId(Integer.parseInt(userId));
-                    exhibitionVisitInfo.setUserId(2);
-                    exhibitionVisitInfo.setExhibitionId(eId);
-                    exhibitionVisitInfoMapper.insert(exhibitionVisitInfo);
-                    //修改redis中的
-                    if(nearbyExhibition == null){
-                        RedisUtil.hdel(RedisUtil.ACTIVE_USER_EXHIBIT,userId);
-                        jsonBody.put("exhibition",null);
-                    }else{
-                        Integer exhibitionId = nearbyExhibition.getExhibitionId();
-                        JSONObject exhibitionJson = new JSONObject();
-                        exhibitionJson.put("eId",exhibitionId);
-                        exhibitionJson.put("sTime",timestamp);
-                        RedisUtil.hset(RedisUtil.ACTIVE_USER_EXHIBIT,userId,exhibitionJson.toJSONString());
-                        jsonBody.put("exhibition",JSONObject.toJSONString(nearbyExhibition));
-                    }
-                    //判断是否需要更新楼层信息
-                    if(RedisUtil.hget(RedisUtil.ACTIVE_USER_FLOOR,userId) != floor){
-                        RedisUtil.hset(RedisUtil.ACTIVE_USER_FLOOR,userId,floor);
-                    }
-                }
+            if(RedisUtil.hget(RedisUtil.ACTIVE_USER_FLOOR,userId) != floor){
+                RedisUtil.hset(RedisUtil.ACTIVE_USER_FLOOR,userId,floor);
             }
         }
         LocInfo locInfo = BeanUtil.locJsonToLocInfo(jsonBody);
@@ -150,41 +94,51 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public String sendToHuaweiServer(HttpServletRequest request,String address) throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        JSONObject requestParamJsonObject = HttpUtils.getRequestPostBytes(request);
-        String key = requestParamJsonObject.getString("appkey");
-        String sign = requestParamJsonObject.getString("sign");
-        //创建和定位服务器http1.1连接
-        URL url = new URL(address);
-        HttpURLConnection conn = null;
-        OutputStream out = null;
-        InputStream in = null;
-        OutputStreamWriter ow = null;
-        //如果访问的是https，取消证书验证
-        if (url.getProtocol().toLowerCase(Locale.ROOT).equals("https")) {
-            conn = HttpUtils.notVarify(conn,url);
-        } else {
-            conn = (HttpURLConnection) url.openConnection();
+    public String findExhibition(JSONObject jsonBody) {
+        String userId = jsonBody.getString("userid");
+        String floor = jsonBody.getJSONObject("location").getString("z");
+        String buildingid = jsonBody.getString("buildingid");
+        Date timestamp = jsonBody.getDate("timestamp");
+        //得到游客周围5m内最近的展品
+        List<Exhibition> exhibitions =  exhibitionMapper.selectByFloorAndBuild(Integer.parseInt(floor),buildingid);
+        Exhibition nearbyExhibition = ExhibitionUtil.NearbyExhibition(exhibitions, jsonBody, RedisUtil.USER_EXHIBITION_DISTANCE);
+        String visitedEx = RedisUtil.hget(RedisUtil.ACTIVE_USER_EXHIBIT, userId);
+        Integer eId = -1;
+        Integer nearEId = -1;
+        //设置时间为一个很远的
+        Date lastVisitTime = new Date(1L);
+        if( visitedEx != null){
+            JSONObject jsonVisit = JSONObject.parseObject(visitedEx);
+            eId = jsonVisit.getInteger("eId");
+            lastVisitTime = jsonVisit.getDate("sTime");
         }
-        Map<String,Object> map = new HashMap<>();
-        map.put("key",key);
-        map.put("sign",sign);
-        //设置请求属性
-        HttpUtils.setRequestParameter(map,conn);
-        conn.connect();
-        //向定位服务器发送定位请求
-        out = conn.getOutputStream();
-        ow = new OutputStreamWriter(out);
-        ow.write(requestParamJsonObject.toString());
-        ow.flush();
-        //收到定位结果
-        in = conn.getInputStream();
-        String body = HttpUtils.getResponseString(in);
-        return body;
+        if(nearbyExhibition != null){
+            nearEId = nearbyExhibition.getExhibitionId();
+        }
+        if(eId !=  nearEId && timestamp.compareTo(lastVisitTime) > 0){
+            if(nearbyExhibition != null){//到达一个展品
+                jsonBody.put("exhibition",JSONObject.toJSONString(nearbyExhibition));
+                JSONObject exhibitionJson = new JSONObject();
+                exhibitionJson.put("eId",nearbyExhibition.getExhibitionId());
+                exhibitionJson.put("sTime",timestamp);
+                RedisUtil.hset(RedisUtil.ACTIVE_USER_EXHIBIT,userId,exhibitionJson.toJSONString());
+            }else{//离开了上一个展品
+//                jsonBody.put("exhibition","");
+                RedisUtil.hdel(RedisUtil.ACTIVE_USER_EXHIBIT,userId);
+            }
+            //如果用户此前有没存库的参观展品记录就存库
+           if(lastVisitTime.compareTo(new Date(1L)) != 0){
+               ExhibitionVisitInfo exhibitionVisitInfo = new ExhibitionVisitInfo(eId,lastVisitTime,timestamp,2);
+//                    ExhibitionVisitInfo exhibitionVisitInfo = new ExhibitionVisitInfo(eId,lastVisitTime,timestamp,userId);
+               exhibitionVisitInfoMapper.insert(exhibitionVisitInfo);
+           }
+        }
+        return jsonBody.toJSONString();
     }
 
+
     //每五分钟把redis中的游客数量统计信息存库清除
-    @Scheduled(cron = " 0 0/5 0-23 * * ?")
+    @Scheduled(cron = " 0 0/1 0-23 * * ?")
     public void savePersonNum(){
         Date now = new Date(System.currentTimeMillis());
         //取出redis中的人数统计信息 存入数据库
@@ -205,7 +159,7 @@ public class LocationServiceImpl implements LocationService {
         }
     }
     //定时每五分钟把redis中的非活跃用户的信息和轨迹存库
-    @Scheduled(cron = " 0 0/5 0-23 * * ?")
+    @Scheduled(cron = " 0 0/1 0-23 * * ?")
     public void saveUnactiveUserLoc(){
         long now = System.currentTimeMillis();
         List<String> userIds = RedisUtil.hkeys(RedisUtil.ACTIVE_USER_FLOOR);

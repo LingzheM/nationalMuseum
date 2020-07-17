@@ -26,7 +26,7 @@ public class RedisUtil {
     public static final String  ACTIVE_USER_FLOOR= "floor";
     public static final String  PERSON_NUMBER= "personNumber";
     //判定游客离开的时间间隔
-    public static final Integer LEAVE_TIME = 5;
+    public static final Integer LEAVE_TIME = 1;
     //判断游客到达展品的距离
     public static final Integer USER_EXHIBITION_DISTANCE = 30;
 
