@@ -15,7 +15,7 @@ import javax.websocket.server.ServerEndpointConfig;
  * @author: Ljx
  * @create: 2020-07-02 22:34
  **/
-@Configuration
+//@Configuration
 public class WebSocketConfig {
     @Bean
     @Profile(value = {"dev","test"})

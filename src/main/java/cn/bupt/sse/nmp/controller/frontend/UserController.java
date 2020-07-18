@@ -30,7 +30,7 @@ public class UserController {
     private UserRoleService userRoleService;
 
     @ApiOperation(value = "查询用户", notes = "根据用户名，角色名，角色手机号进行模糊查询")
-    @GetMapping(value = "select")
+    @GetMapping(value = "/select")
     public Result selectAll(@RequestParam(defaultValue = "1") int pageNum,
                             @RequestParam(defaultValue = "10") int pageSize,
                             @RequestParam String userInfo){
